@@ -73,6 +73,7 @@ class SiteScan:
     pages: tuple[str, ...]  # URLs actually read
     blocked: int  # pages robots.txt kept us out of
     gtm_container: str | None
+    failed: int = 0  # pages that could not be fetched at all
 
 
 def detect(text: str) -> set[str]:
@@ -82,7 +83,7 @@ def detect(text: str) -> set[str]:
 def scan_site(fetcher: Fetcher, domain: str) -> SiteScan:
     tools: set[str] = set()
     pages: list[str] = []
-    blocked = 0
+    blocked = failed = 0
     container: str | None = None
     urls = [f"https://{domain}/"]
     for path in EXTRA_PAGES:
@@ -94,6 +95,7 @@ def scan_site(fetcher: Fetcher, domain: str) -> SiteScan:
         try:
             page = fetcher.get(url)
         except FetchError:
+            failed += 1
             continue
         if page.blocked:
             blocked += 1
@@ -112,8 +114,8 @@ def scan_site(fetcher: Fetcher, domain: str) -> SiteScan:
             if gtm.ok:
                 tools |= detect(gtm.text)
         except FetchError:
-            pass
-    return SiteScan(tuple(sorted(tools)), tuple(pages), blocked, container)
+            failed += 1
+    return SiteScan(tuple(sorted(tools)), tuple(pages), blocked, container, failed)
 
 
 @dataclass(frozen=True)

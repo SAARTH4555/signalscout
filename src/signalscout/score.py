@@ -21,9 +21,10 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from signalscout.accounts import Account
-from signalscout.crm import CrmGuess
+from signalscout.crm import CrmGuess, SiteScan
 from signalscout.funding import Funding
 from signalscout.jobs.ats import Job
+from signalscout.jobs.discover import BoardMatch
 from signalscout.roles import RoleKind, RoleMatch
 
 Tier = Literal["A", "B", "C"]
@@ -103,6 +104,9 @@ class AccountSignals:
     has_board: bool = False
     funding: Funding | None = None
     crm: CrmGuess | None = None
+    board: BoardMatch | None = None
+    site: SiteScan | None = None
+    errors: tuple[str, ...] = ()  # collection steps that failed; the score uses what remains
 
 
 @dataclass(frozen=True)

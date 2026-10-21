@@ -1,0 +1,17 @@
+{
+  "about": "Recorded, synthetic responses for `signalscout run --offline`: three fictional companies, every signal path exercised, no network.",
+  "as_of": "2026-10-15",
+  "routes": {
+    "https://yc-oss.github.io/api/companies/all.json": "yc.json",
+    "https://ledgerline.io/careers": "careers_ledgerline.html",
+    "https://api.ashbyhq.com/posting-api/job-board/ledgerline?includeCompensation=true": "ashby_ledgerline.json",
+    "https://boards-api.greenhouse.io/v1/boards/orbitstack/jobs?content=true": "greenhouse_orbitstack.json",
+    "https://api.lever.co/v0/postings/harborview?mode=json": "lever_harborview.json",
+    "https://efts.sec.gov/LATEST/search-index?q=&forms=D%2CD%2FA&entityName=Ledgerline&dateRange=custom&startdt=2025-04-23&enddt=2026-10-15": "search_ledgerline.json",
+    "https://www.sec.gov/Archives/edgar/data/1999999/000199999926000002/primary_doc.xml": "form_d_ledgerline_2026.xml",
+    "https://www.sec.gov/Archives/edgar/data/1888888/000188888826000004/primary_doc.xml": "form_d_fund.xml",
+    "https://orbitstack.dev/": "hubspot_home.html",
+    "https://harborview.com/": "gtm_home.html",
+    "https://www.googletagmanager.com/gtm.js?id=GTM-AB12CD": "gtm_container.js"
+  }
+}
