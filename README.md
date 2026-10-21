@@ -70,9 +70,9 @@ The full live procedure is [`docs/runbook.md`](docs/runbook.md).
 
 ```
 YC directory: 3 of 10 companies kept
-  [1/3] harborview.com               Tier B  score  51
-  [2/3] ledgerline.io                Tier A  score  79
-  [3/3] orbitstack.dev               Tier B  score  47
+  [1/3] harborview.example           Tier B  score  51
+  [2/3] ledgerline.example           Tier A  score  79
+  [3/3] orbitstack.example           Tier B  score  47
 
 Tier A 1, Tier B 2, Tier C 0
   wrote data/out/accounts.csv (3 rows)
@@ -80,7 +80,7 @@ Tier A 1, Tier B 2, Tier C 0
   wrote data/out/pipelineos/companies.csv (1 rows)
   wrote data/out/pipelineos/contacts.csv (0 rows)
 
-Ledgerline (ledgerline.io): Tier A, 79
+Ledgerline (ledgerline.example): Tier A, 79
   - 120 people, inside the 50-500 band
   - Runs Salesforce (high confidence: 2 job postings name Salesforce)
   - Hiring: Revenue Operations Manager (Revenue Operations, posted 13 days ago)
@@ -89,7 +89,8 @@ Ledgerline (ledgerline.io): Tier A, 79
 ```
 
 Read that as: the two Tier-B companies are hiring too, but their openings are older and neither
-raised in the last year, so they stay below Tier A. Every company here is fictional.
+raised in the last year, so they stay below Tier A. Every company here is fictional, on the
+reserved `.example` domain, so none of it can be mistaken for a real business.
 
 ## Results
 

@@ -20,8 +20,12 @@ def load(name: str) -> str:
     return (BOARDS / name).read_text()
 
 
-LEDGERLINE = Account("ledgerline.io", "Ledgerline", "ledgerline.io", yc_slug="ledgerline")
-ORBITSTACK = Account("orbitstack.dev", "Orbitstack", "orbitstack.dev")
+LEDGERLINE = Account(
+    "ledgerline.example", "Ledgerline", "ledgerline.example", yc_slug="ledgerline-demo"
+)
+ORBITSTACK = Account(
+    "orbitstack.example", "Orbitstack", "orbitstack.example", yc_slug="orbitstack-demo"
+)
 
 
 def test_links_on_page_finds_every_vendor_once() -> None:
@@ -54,8 +58,8 @@ def test_slug_candidates() -> None:
 def test_careers_page_link_wins() -> None:
     fake = FakeFetcher(
         {
-            "https://ledgerline.io/careers": load("careers_ledgerline.html"),
-            board_url("ashby", "ledgerline"): load("ashby_ledgerline.json"),
+            "https://ledgerline.example/careers": load("careers_ledgerline.html"),
+            board_url("ashby", "ledgerline-demo"): load("ashby_ledgerline.json"),
         }
     )
     match = find_board(fake, LEDGERLINE)
@@ -70,7 +74,7 @@ def test_careers_page_errors_fall_through_to_guessing() -> None:
                 raise FetchError("down")
             return super().get(url)
 
-    fake = Flaky({board_url("greenhouse", "orbitstack"): load("greenhouse_orbitstack.json")})
+    fake = Flaky({board_url("greenhouse", "orbitstack-demo"): load("greenhouse_orbitstack.json")})
     match = find_board(fake, ORBITSTACK)
     assert match is not None and match.via == "guess" and match.verified
     assert match.board.company_name == "Orbitstack"
@@ -78,14 +82,16 @@ def test_careers_page_errors_fall_through_to_guessing() -> None:
 
 def test_guess_on_someone_elses_board_is_rejected() -> None:
     impostor = Account(
-        "orbitstack.ai", "Orbit Stack AI Robotics", "orbitstack.ai", yc_slug="orbitstack"
+        "orbitstack.ai", "Orbit Stack AI Robotics", "orbitstack.ai", yc_slug="orbitstack-demo"
     )
-    fake = FakeFetcher({board_url("greenhouse", "orbitstack"): load("greenhouse_orbitstack.json")})
+    fake = FakeFetcher(
+        {board_url("greenhouse", "orbitstack-demo"): load("greenhouse_orbitstack.json")}
+    )
     assert find_board(fake, impostor) is None
 
 
 def test_empty_board_is_kept_only_as_unverified() -> None:
-    fake = FakeFetcher({board_url("lever", "ledgerline"): "[]"})
+    fake = FakeFetcher({board_url("lever", "ledgerline-demo"): "[]"})
     match = by_guessing(fake, LEDGERLINE)
     assert match is not None and not match.verified and match.board.jobs == ()
 
@@ -100,6 +106,8 @@ def test_belongs_to_uses_descriptions_not_urls() -> None:
     assert not belongs_to(_board("We build search for research teams."), arc)  # no "arc" word
     assert belongs_to(_board("At Arc we ship fast."), arc)
     assert belongs_to(_board("Visit arc.dev for more."), arc)
-    harbor = Account("harborview.com", "Harborview", "harborview.com")
+    harbor = Account("harborview.example", "Harborview", "harborview.example")
     assert belongs_to(_board("Harbor View is hiring"), harbor)  # squashed match
-    assert not belongs_to(_board("nothing here", url="https://jobs.lever.co/harborview/1"), harbor)
+    assert not belongs_to(
+        _board("nothing here", url="https://jobs.lever.co/harborview-demo/1"), harbor
+    )

@@ -29,6 +29,8 @@ from signalscout.normalize import (
         ("", None),
         ("   ", None),
         ("localhost", None),
+        ("https://www.ledgerline.example/careers", "ledgerline.example"),
+        ("example", None),
     ],
 )
 def test_registrable_domain_matches_pipelineos(raw: str, domain: str | None) -> None:
@@ -50,6 +52,7 @@ def test_names_match_pipelineos() -> None:
 def test_signalscout_helpers() -> None:
     assert domain_label("ramp.com") == "ramp"
     assert domain_label("foo.co.uk") == "foo"
+    assert domain_label("ledgerline.example") == "ledgerline"
     assert strip_legal_form("Ramp Business Corporation") == "Ramp Business"
     assert strip_legal_form("Acme Holdings, Inc.") == "Acme"
     assert strip_legal_form("Coinbase") == "Coinbase"  # "co" only as a separate word

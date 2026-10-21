@@ -31,10 +31,10 @@ def test_sample_reads_the_cache_then_score_counts_labels(
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("SIGNALSCOUT_CACHE_DIR", str(tmp_path / "cache"))
     get_settings.cache_clear()
-    url = board_url("ashby", "ledgerline")
+    url = board_url("ashby", "ledgerline-demo")
     DiskCache(tmp_path / "cache").put(Response(url, 200, BOARD), time.time())
     accounts = tmp_path / "accounts.csv"
-    accounts.write_text("company_key,job_board\nledgerline.io,ashby:ledgerline\nquiet.io,\n")
+    accounts.write_text("company_key,job_board\nledgerline.example,ashby:ledgerline-demo\nquiet.io,\n")
 
     module = runpy.run_path(str(SCRIPT))
     module["sample"](accounts, 30, 7)

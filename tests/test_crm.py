@@ -24,25 +24,25 @@ def test_detect_signatures() -> None:
 def test_scan_reads_home_and_one_form_page() -> None:
     fake = FakeFetcher(
         {
-            "https://orbitstack.dev/": page("hubspot_home.html"),
-            "https://orbitstack.dev/demo": page("pardot_contact.html"),
-            "https://orbitstack.dev/contact": "<html></html>",
+            "https://orbitstack.example/": page("hubspot_home.html"),
+            "https://orbitstack.example/demo": page("pardot_contact.html"),
+            "https://orbitstack.example/contact": "<html></html>",
         }
     )
-    scan = scan_site(fake, "orbitstack.dev")
+    scan = scan_site(fake, "orbitstack.example")
     assert scan.tools == ("hubspot", "pardot", "segment")
-    assert scan.pages == ("https://orbitstack.dev/", "https://orbitstack.dev/demo")
-    assert "https://orbitstack.dev/contact" not in fake.calls
+    assert scan.pages == ("https://orbitstack.example/", "https://orbitstack.example/demo")
+    assert "https://orbitstack.example/contact" not in fake.calls
 
 
 def test_scan_follows_the_tag_manager_container() -> None:
     fake = FakeFetcher(
         {
-            "https://harborview.com/": page("gtm_home.html"),
+            "https://harborview.example/": page("gtm_home.html"),
             "https://www.googletagmanager.com/gtm.js?id=GTM-AB12CD": page("gtm_container.js"),
         }
     )
-    scan = scan_site(fake, "harborview.com")
+    scan = scan_site(fake, "harborview.example")
     assert scan.gtm_container == "GTM-AB12CD" and scan.tools == ("marketo",)
 
 

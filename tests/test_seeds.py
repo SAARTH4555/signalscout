@@ -21,9 +21,9 @@ def sample() -> list[dict[str, Any]]:
 def test_yc_filter_keeps_us_b2b_active_in_band_and_counts_drops() -> None:
     accounts, report = yc_accounts(sample())
     assert [a.company_key for a in accounts] == [
-        "ledgerline.io",
-        "orbitstack.dev",
-        "harborview.com",
+        "ledgerline.example",
+        "orbitstack.example",
+        "harborview.example",
     ]
     assert report.loaded == 10 and report.kept == 3
     assert report.dropped == {
@@ -36,7 +36,7 @@ def test_yc_filter_keeps_us_b2b_active_in_band_and_counts_drops() -> None:
     }
     ledgerline = accounts[0]
     assert ledgerline.name == "Ledgerline"  # legal form stripped
-    assert ledgerline.sources == ("yc",) and ledgerline.yc_slug == "ledgerline"
+    assert ledgerline.sources == ("yc",) and ledgerline.yc_slug == "ledgerline-demo"
     assert ledgerline.team_size == 120 and ledgerline.yc_hiring is True
     # US detected from the location string when regions is empty
     assert accounts[2].location == "Remote; Miami, FL, USA"
@@ -45,8 +45,8 @@ def test_yc_filter_keeps_us_b2b_active_in_band_and_counts_drops() -> None:
 def test_yc_filter_is_configurable() -> None:
     wide, _ = yc_accounts(sample(), YcFilter(min_team=10, max_team=5000, us_only=False))
     keys = {a.company_key for a in wide}
-    assert {"tinytools.ai", "bergwerk.de"} <= keys
-    assert "megacorp.com" not in keys  # still not Active
+    assert {"tinytools.example", "bergwerk.example"} <= keys
+    assert "megacorp.example" not in keys  # still not Active
 
 
 def test_fetch_yc_uses_the_fetcher() -> None:
@@ -60,14 +60,14 @@ def test_csv_seeds(tmp_path: Path) -> None:
     path = tmp_path / "seeds.csv"
     path.write_text(
         "name,domain,notes\n"
-        "Ledgerline Inc,https://ledgerline.io/about,warm intro\n"
-        "Fieldnote,fieldnote.app,\n"
+        "Ledgerline Inc,https://ledgerline.example/about,warm intro\n"
+        "Fieldnote,fieldnote.example,\n"
         "Broken,,\n"
     )
     accounts = csv_accounts(path)
     assert [(a.company_key, a.name, a.sources) for a in accounts] == [
-        ("ledgerline.io", "Ledgerline", ("seed",)),
-        ("fieldnote.app", "Fieldnote", ("seed",)),
+        ("ledgerline.example", "Ledgerline", ("seed",)),
+        ("fieldnote.example", "Fieldnote", ("seed",)),
     ]
 
 

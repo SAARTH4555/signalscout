@@ -34,9 +34,9 @@ def offline_run() -> tuple[list[ScoredAccount], dict[str, object], date]:
 def test_offline_world_end_to_end() -> None:
     scored, summary, _ = offline_run()
     assert [(s.signals.account.company_key, s.tier) for s in scored] == [
-        ("ledgerline.io", "A"),
-        ("harborview.com", "B"),
-        ("orbitstack.dev", "B"),
+        ("ledgerline.example", "A"),
+        ("harborview.example", "B"),
+        ("orbitstack.example", "B"),
     ]
     assert summary["tiers"] == {"A": 1, "B": 2, "C": 0}
     assert summary["boards_by_ats"] == {"ashby": 1, "greenhouse": 1, "lever": 1}
@@ -121,7 +121,7 @@ def test_outputs(tmp_path: Path) -> None:
     }
     accounts = read(tmp_path / "accounts.csv")
     assert accounts[0]["best_role"] == "Revenue Operations Manager"
-    assert accounts[0]["job_board"] == "ashby:ledgerline" and accounts[0]["stage_guess"]
+    assert accounts[0]["job_board"] == "ashby:ledgerline-demo" and accounts[0]["stage_guess"]
     clay = read(tmp_path / "tier_a.csv")
     assert clay[0]["why_now"].startswith("120 people")
     header = (tmp_path / "pipelineos" / "companies.csv").read_text().splitlines()[0].split(",")
