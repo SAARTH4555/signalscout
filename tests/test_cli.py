@@ -35,7 +35,7 @@ def test_run_offline_writes_outputs_and_report(
     )
     assert result.exit_code == 0, result.output
     assert "Tier A 1, Tier B 2, Tier C 0" in result.stdout
-    assert "Ledgerline (ledgerline.io): Tier A" in result.stdout
+    assert "Ledgerline (ledgerline.example): Tier A" in result.stdout
     assert (tmp_path / "out" / "tier_a.csv").exists()
     assert '"mode": "offline"' in report.read_text()
 
@@ -45,7 +45,7 @@ def test_run_offline_with_seed_csv_and_limit(
 ) -> None:
     monkeypatch.chdir(ROOT)
     seeds = tmp_path / "seeds.csv"
-    seeds.write_text("name,domain\nNew Co,newco.io\n")
+    seeds.write_text("name,domain\nNew Co,newco.example\n")
     result = runner.invoke(
         app,
         [
@@ -65,7 +65,7 @@ def test_run_offline_with_seed_csv_and_limit(
         ],
     )
     assert result.exit_code == 0, result.output
-    assert "newco.io" in result.stdout and "Tier C" in result.stdout
+    assert "newco.example" in result.stdout and "Tier C" in result.stdout
 
 
 def test_run_errors(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

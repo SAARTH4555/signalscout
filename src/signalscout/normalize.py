@@ -22,11 +22,18 @@ _EXTRACT = tldextract.TLDExtract(suffix_list_urls=(), cache_dir=None)
 
 
 def registrable_domain(raw: str) -> str | None:
-    """``https://www.acme.io/pricing`` -> ``acme.io``; ``None`` for anything without a suffix."""
+    """``https://www.acme.io/pricing`` -> ``acme.io``; ``None`` for anything without a suffix.
+
+    ``.example`` (reserved by RFC 2606, never a real business) counts as a suffix, so demo data
+    and fixtures can use ``ledgerline.example`` instead of a domain someone may own.
+    """
     value = raw.strip().lower()
     if not value:
         return None
-    domain = _EXTRACT(value).top_domain_under_public_suffix
+    extracted = _EXTRACT(value)
+    domain = extracted.top_domain_under_public_suffix
+    if not domain and extracted.domain == "example" and extracted.subdomain:
+        domain = f"{extracted.subdomain.rsplit('.', 1)[-1]}.example"
     return domain or None
 
 
@@ -61,7 +68,10 @@ _LEGAL_FORM_RE = re.compile(
 
 def domain_label(domain: str) -> str:
     """Registered name without its suffix: ``ramp.com`` -> ``ramp``, ``foo.co.uk`` -> ``foo``."""
-    return _EXTRACT(domain).domain.lower()
+    extracted = _EXTRACT(domain)
+    if not extracted.suffix and extracted.domain == "example" and extracted.subdomain:
+        return extracted.subdomain.rsplit(".", 1)[-1].lower()  # RFC 2606 demo domains
+    return extracted.domain.lower()
 
 
 def strip_legal_form(name: str) -> str:

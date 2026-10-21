@@ -19,9 +19,9 @@ from signalscout.funding import (
 
 SEC = Path(__file__).parent / "fixtures" / "sec"
 AS_OF = date(2026, 10, 15)
-LEDGERLINE = Account("ledgerline.io", "Ledgerline", "ledgerline.io")
-DOC_2026 = "https://www.sec.gov/Archives/edgar/data/1999999/000199999926000002/primary_doc.xml"
-DOC_FUND = "https://www.sec.gov/Archives/edgar/data/1888888/000188888826000004/primary_doc.xml"
+LEDGERLINE = Account("ledgerline.example", "Ledgerline", "ledgerline.example")
+DOC_2026 = "https://www.sec.gov/Archives/edgar/data/9999999/000999999926000002/primary_doc.xml"
+DOC_FUND = "https://www.sec.gov/Archives/edgar/data/9888888/000988888826000004/primary_doc.xml"
 
 
 def test_search_url_strips_legal_form_and_sets_window() -> None:
@@ -34,7 +34,7 @@ def test_search_url_strips_legal_form_and_sets_window() -> None:
 
 def test_parse_hits_builds_raw_xml_urls() -> None:
     hits = parse_hits(json.loads((SEC / "search_ledgerline.json").read_text()))
-    assert [h.cik for h in hits] == ["1999999", "1999999", "1888888"]
+    assert [h.cik for h in hits] == ["9999999", "9999999", "9888888"]
     assert hits[0].issuer == "Ledgerline, Inc." and hits[0].filed == date(2026, 8, 27)
     assert hits[0].document_url == DOC_2026
     assert hits[2].document_url == DOC_FUND  # rendering prefix dropped
@@ -50,10 +50,10 @@ def test_name_matching() -> None:
 
 
 def test_parse_form_d() -> None:
-    hit = Hit("1999999", "Ledgerline, Inc.", "D", date(2026, 8, 27), DOC_2026)
+    hit = Hit("9999999", "Ledgerline, Inc.", "D", date(2026, 8, 27), DOC_2026)
     funding = parse_form_d((SEC / "form_d_ledgerline_2026.xml").read_text(), hit)
     assert funding == Funding(
-        cik="1999999",
+        cik="9999999",
         issuer="Ledgerline, Inc.",
         form="D",
         filed=date(2026, 8, 27),
@@ -101,7 +101,7 @@ def test_no_match_ambiguous_and_broken_cases() -> None:
     assert latest_funding(FakeFetcher(), LEDGERLINE, AS_OF) is None  # search failed
     search = search_url("Ledgerline", AS_OF, 540)
     data = json.loads((SEC / "search_ledgerline.json").read_text())
-    data["hits"]["hits"][1]["_source"]["ciks"] = ["0001777777"]  # a second "Ledgerline Inc"
+    data["hits"]["hits"][1]["_source"]["ciks"] = ["0009777777"]  # a second "Ledgerline Inc"
     assert latest_funding(FakeFetcher({search: json.dumps(data)}), LEDGERLINE, AS_OF) is None
     broken = FakeFetcher(
         {search: (SEC / "search_ledgerline.json").read_text(), DOC_2026: "<not xml"}

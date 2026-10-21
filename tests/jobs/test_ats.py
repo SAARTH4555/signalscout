@@ -23,8 +23,10 @@ def test_board_urls() -> None:
 
 
 def test_ashby_skips_unlisted_and_trims_titles() -> None:
-    url = board_url("ashby", "ledgerline")
-    board = parse_board("ashby", "ledgerline", Response(url, 200, load("ashby_ledgerline.json")))
+    url = board_url("ashby", "ledgerline-demo")
+    board = parse_board(
+        "ashby", "ledgerline-demo", Response(url, 200, load("ashby_ledgerline.json"))
+    )
     assert [j.title for j in board.jobs] == [
         "Revenue Operations Manager",
         "Senior Account Executive",
@@ -37,9 +39,9 @@ def test_ashby_skips_unlisted_and_trims_titles() -> None:
 
 
 def test_greenhouse_unescapes_html_and_falls_back_to_updated_at() -> None:
-    url = board_url("greenhouse", "orbitstack")
+    url = board_url("greenhouse", "orbitstack-demo")
     board = parse_board(
-        "greenhouse", "orbitstack", Response(url, 200, load("greenhouse_orbitstack.json"))
+        "greenhouse", "orbitstack-demo", Response(url, 200, load("greenhouse_orbitstack.json"))
     )
     assert board.company_name == "Orbitstack"
     admin, engineer = board.jobs
@@ -55,8 +57,10 @@ def test_greenhouse_unescapes_html_and_falls_back_to_updated_at() -> None:
 
 
 def test_lever_epoch_millis_and_list_text() -> None:
-    url = board_url("lever", "harborview")
-    board = parse_board("lever", "harborview", Response(url, 200, load("lever_harborview.json")))
+    url = board_url("lever", "harborview-demo")
+    board = parse_board(
+        "lever", "harborview-demo", Response(url, 200, load("lever_harborview.json"))
+    )
     (job,) = board.jobs
     assert job.title == "GTM Engineer" and job.remote is True
     assert job.posted_at == datetime.fromtimestamp(1790000000, UTC)
