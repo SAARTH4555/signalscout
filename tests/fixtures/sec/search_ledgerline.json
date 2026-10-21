@@ -1,0 +1,5 @@
+{"took": 12, "hits": {"total": {"value": 3, "relation": "eq"}, "hits": [
+  {"_id": "0001999999-26-000002:primary_doc.xml", "_source": {"ciks": ["0001999999"], "display_names": ["Ledgerline, Inc.  (CIK 0001999999)"], "file_date": "2026-08-27", "form": "D", "root_forms": ["D"], "biz_states": ["CA"], "adsh": "0001999999-26-000002"}},
+  {"_id": "0001999999-25-000001:primary_doc.xml", "_source": {"ciks": ["0001999999"], "display_names": ["Ledgerline, Inc.  (CIK 0001999999)"], "file_date": "2025-06-02", "form": "D", "root_forms": ["D"], "biz_states": ["CA"], "adsh": "0001999999-25-000001"}},
+  {"_id": "0001888888-26-000004:xslFormDX01/primary_doc.xml", "_source": {"ciks": ["0001888888"], "display_names": ["Ledgerline Opportunity Fund I, L.P.  (CIK 0001888888)"], "file_date": "2026-09-30", "form": "D", "root_forms": ["D"], "biz_states": ["NY"], "adsh": "0001888888-26-000004"}}
+]}}
