@@ -34,7 +34,9 @@ def test_sample_reads_the_cache_then_score_counts_labels(
     url = board_url("ashby", "ledgerline-demo")
     DiskCache(tmp_path / "cache").put(Response(url, 200, BOARD), time.time())
     accounts = tmp_path / "accounts.csv"
-    accounts.write_text("company_key,job_board\nledgerline.example,ashby:ledgerline-demo\nquiet.io,\n")
+    accounts.write_text(
+        "company_key,job_board\nledgerline.example,ashby:ledgerline-demo\nquiet.io,\n"
+    )
 
     module = runpy.run_path(str(SCRIPT))
     module["sample"](accounts, 30, 7)
