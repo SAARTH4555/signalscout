@@ -46,6 +46,9 @@ SignalScout does and does not collect is in [`docs/ethics.md`](docs/ethics.md).
 
 ## Quickstart
 
+**New here?** [`docs/run-it-yourself.md`](docs/run-it-yourself.md) walks through it step by
+step: a live run, your own Clay table, and the accounts in HubSpot.
+
 Python 3.12 and [uv](https://docs.astral.sh/uv/).
 
 ```bash
