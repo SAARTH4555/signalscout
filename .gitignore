@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+.env
+.coverage
+coverage.xml
+htmlcov/
+.DS_Store
+
+# run outputs and the HTTP cache: regenerate with `signalscout run` (anchored: src/signalscout/data stays tracked)
+/data/
+/.cache/
+
+# local planning workspace
+.claude-protocol/
+research/
