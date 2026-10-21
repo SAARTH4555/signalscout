@@ -1,0 +1,96 @@
+# Clay table spec for SignalScout. Clay tables cannot be exported or imported as files, so this
+# spec is the source of truth: `signalscout clay-spec` validates it, computes the credit budget
+# and renders docs/clay-table.md, the click-by-click build guide.
+#
+# Credit costs are estimates. Clay publishes no per-provider price list; the figures below are
+# the upper end of third-party write-ups from 2026, so the budget is a worst case.
+
+version: 1
+
+plan:
+  name: Free
+  data_credits_per_month: 100
+  actions_per_month: 500
+  rows_per_table: 200
+
+tables:
+  - name: SignalScout Accounts
+    purpose: One row per Tier-A account from SignalScout, with the signals already filled in.
+    source:
+      kind: csv_import
+      file: data/out/tier_a.csv
+    columns:
+      - {name: company_name, kind: imported}
+      - {name: domain, kind: imported}
+      - {name: tier, kind: imported}
+      - {name: score, kind: imported}
+      - {name: why_now, kind: imported}
+      - {name: best_role, kind: imported}
+      - {name: best_role_url, kind: imported}
+      - {name: crm, kind: imported}
+      - {name: funding_amount, kind: imported}
+      - {name: funding_date, kind: imported}
+      - {name: team_size, kind: imported}
+      - name: gtm_research
+        kind: claygent
+        run_if: tier = A
+        credits: 0
+        actions: 1
+        prompt: >
+          Read the job posting at {{best_role_url}} and the company site {{domain}}. In at most
+          three bullet points, say what GTM-ops problem this hire is meant to fix (for example:
+          no single source of truth for pipeline, a CRM migration, lead routing, reporting for a
+          board). Quote the posting where you can. If the posting is gone, say so and stop.
+        output:
+          problems: list of strings
+          quote: string
+          posting_live: boolean
+
+  - name: SignalScout People
+    purpose: The 1-2 people at each account who would hire a RevOps consultancy.
+    source:
+      kind: find_people
+      from_table: SignalScout Accounts
+      match_on: domain
+      titles:
+        - Head of Revenue Operations
+        - VP Revenue Operations
+        - Director of Revenue Operations
+        - Chief Revenue Officer
+        - VP Sales
+        - Head of Sales
+        - Chief Operating Officer
+      max_per_company: 2
+      credits_per_company: 1
+    columns:
+      - {name: full_name, kind: provided}
+      - {name: title, kind: provided}
+      - {name: linkedin_url, kind: provided}
+      - {name: company_domain, kind: provided}
+      - name: work_email
+        kind: waterfall
+        run_if: title is not empty
+        providers:
+          - {name: email provider 1, credits: 2}
+          - {name: email provider 2, credits: 2}
+          - {name: email provider 3, credits: 3}
+        stop_at_first_result: true
+      - name: email_valid
+        kind: enrichment
+        run_if: work_email is not empty
+        credits: 1
+        actions: 1
+      - name: opening_line
+        kind: ai
+        run_if: email_valid = true
+        credits: 0
+        actions: 1
+        prompt: >
+          Write one sentence, under 25 words, to {{full_name}} ({{title}}) that names one
+          specific signal from: {{why_now}}. Use only facts in that text. No flattery, no
+          questions. If the text has no concrete signal, return an empty string.
+
+contact_policy:
+  - People data stays in Clay and HubSpot. It is never exported back into the SignalScout repo.
+  - Every opening line must cite a signal from why_now; empty means do not send.
+  - Sequences carry an unsubscribe link and a postal address (CAN-SPAM).

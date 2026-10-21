@@ -15,6 +15,7 @@ import typer
 
 from signalscout import __version__
 from signalscout.accounts import Account, merge_accounts
+from signalscout.clay import budget, load_clay_spec, render_guide
 from signalscout.export import write_outputs
 from signalscout.fetch import ConfigError, DiskCache, Fetcher, FetchError, HttpFetcher
 from signalscout.offline import DEFAULT_DIR, load_offline
@@ -127,3 +128,37 @@ def run_cmd(
     if report is not None:
         report.parent.mkdir(parents=True, exist_ok=True)
         report.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+
+
+@app.command(name="clay-spec")
+def clay_spec_cmd(
+    spec: Annotated[Path, typer.Option(help="Clay table spec YAML.")] = Path(
+        "clay/table_spec.yaml"
+    ),
+    out: Annotated[Path, typer.Option(help="Where the build guide goes.")] = Path(
+        "docs/clay-table.md"
+    ),
+    check: Annotated[bool, typer.Option(help="Fail if the committed guide is stale.")] = False,
+) -> None:
+    """Validate the Clay table spec, print its credit budget, write the build guide."""
+    try:
+        parsed = load_clay_spec(spec)
+    except (ValueError, OSError) as exc:
+        typer.echo(f"error: {exc}", err=True)
+        raise typer.Exit(1) from exc
+    b = budget(parsed)
+    typer.echo(
+        f"ok: {spec} ({b['credits_per_account']:g} credits and {b['actions_per_account']:g} "
+        f"actions per Tier-A account at worst; {b['accounts_per_month']:g} accounts / month on "
+        f"Clay {parsed.plan.name})"
+    )
+    rendered = render_guide(parsed, spec.as_posix())
+    if check:
+        if not out.exists() or out.read_text() != rendered:
+            typer.echo(f"{out} is stale: run `signalscout clay-spec`", err=True)
+            raise typer.Exit(1)
+        typer.echo(f"{out} is up to date")
+        return
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(rendered)
+    typer.echo(f"wrote {out}")

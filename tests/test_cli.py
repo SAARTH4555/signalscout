@@ -107,3 +107,19 @@ def test_run_live_yc_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     monkeypatch.setattr("signalscout.cli.fetch_yc", boom)
     result = runner.invoke(app, ["run", "--out", str(tmp_path)])
     assert result.exit_code == 1 and "HTTP 503" in result.output
+
+
+def test_clay_spec_command(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(ROOT)
+    ok = runner.invoke(app, ["clay-spec", "--check"])
+    assert ok.exit_code == 0, ok.output
+    assert "5 accounts / month on Clay Free" in ok.stdout
+    out = tmp_path / "guide.md"
+    assert runner.invoke(app, ["clay-spec", "--out", str(out)]).exit_code == 0
+    out.write_text(out.read_text() + "drift\n")
+    stale = runner.invoke(app, ["clay-spec", "--out", str(out), "--check"])
+    assert stale.exit_code == 1 and "stale" in stale.output
+    bad = tmp_path / "bad.yaml"
+    bad.write_text("version: 2\n")
+    broken = runner.invoke(app, ["clay-spec", "--spec", str(bad), "--out", str(out)])
+    assert broken.exit_code == 1 and "error" in broken.output
