@@ -48,7 +48,8 @@ ROLE_PATTERNS: tuple[tuple[RoleKind, re.Pattern[str]], ...] = (
         "sales_ops",
         re.compile(
             r"\b(sales operations|sales ops|salesops|sales systems|"
-            r"sales strategy (and|&) operations|sales enablement operations|deal desk)\b"
+            r"sales strategy (and|&) operations|sales enablement operations|deal desk|"
+            r"(sales |incentive )?comp(ensation)? (operations|ops))\b"
         ),
     ),
     (
@@ -66,7 +67,7 @@ ROLE_PATTERNS: tuple[tuple[RoleKind, re.Pattern[str]], ...] = (
         "sales_leader",
         re.compile(
             r"\b(chief revenue officer|(vp|vice president|svp|head),? (of )?(global )?(sales|"
-            r"revenue))\b"
+            r"revenue))\b(?!\s+(enablement|development))"
         ),
     ),
 )

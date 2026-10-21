@@ -22,12 +22,15 @@ re-run reads from `.cache/http` and takes seconds. Outputs land in `data/out/` (
 
 ## 3. Check the title classifier on real titles
 
-From `data/out/accounts.csv`, take 30 accounts with a GTM-ops opening and 30 job titles that were
-not matched, and mark each by hand. Record precision and recall in `results/live_review.json`:
-
-```json
-{"accepted_checked": 30, "rejected_checked": 30, "precision": 0.93, "recall": 0.9}
+```bash
+uv run python scripts/title_review.py sample      # -> data/out/title_review.csv, from the cache
+# label the is_gtm_ops column yes / no by hand
+uv run python scripts/title_review.py score --labelled-by "<who labelled it>"
 ```
+
+The sample is up to 30 titles the classifier accepted, and 30 "near misses" it rejected that
+contain words like sales, revenue, ops, CRM or marketing. The score goes to
+`results/live_review.json` and into the README.
 
 ## 4. Build the Clay tables
 

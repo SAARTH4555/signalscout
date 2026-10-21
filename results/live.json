@@ -1,0 +1,48 @@
+{
+  "accounts": 170,
+  "accounts_with_errors": 0,
+  "as_of": "2026-10-21",
+  "boards_by_ats": {
+    "ashby": 78,
+    "greenhouse": 22,
+    "lever": 10
+  },
+  "boards_found_via": {
+    "careers_page": 67,
+    "guess": 43
+  },
+  "crm_identified_by_confidence": {
+    "high": 73,
+    "low": 1,
+    "medium": 34
+  },
+  "fetches": {
+    "blocked_by_robots": 20,
+    "failed": 1,
+    "from_cache": 1150,
+    "requests": 1170
+  },
+  "gtm_ops_openings_by_kind": {
+    "crm_admin": 2,
+    "gtm_engineer": 8,
+    "marketing_ops": 2,
+    "revops": 8,
+    "sales_leader": 10,
+    "sales_ops": 8
+  },
+  "mode": "live",
+  "open_jobs_read": 2306,
+  "sources": {
+    "job_boards": true,
+    "sec_funding": false,
+    "websites": true
+  },
+  "tiers": {
+    "A": 6,
+    "B": 21,
+    "C": 143
+  },
+  "with_board": 110,
+  "with_gtm_ops_opening": 29,
+  "with_recent_funding": 0
+}

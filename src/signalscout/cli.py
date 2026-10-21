@@ -116,6 +116,7 @@ def run_cmd(
     summary = result.summary()
     summary["as_of"] = day.isoformat()
     summary["mode"] = "offline" if offline else "live"
+    summary["sources"] = {"job_boards": True, "sec_funding": funding, "websites": crm}
     tiers = summary["tiers"]
     typer.echo(f"\nTier A {tiers['A']}, Tier B {tiers['B']}, Tier C {tiers['C']}")  # type: ignore[index]
     for name, rows in written.items():

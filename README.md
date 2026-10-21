@@ -101,7 +101,22 @@ disagree.
 
 ### Live run
 
-Not run yet: see `docs/runbook.md`.
+Real public data from the sources listed. Account-level counts only; the account list itself is not committed.
+
+| | |
+|---|---|
+| Accounts looked at | 170 (as of 2026-10-21) |
+| Sources used | job boards, websites (off: SEC Form D) |
+| Tiers | A 6, B 21, C 143 |
+| Job board found | 110 of 170 (ashby 78, greenhouse 22, lever 10; via careers_page 67, guess 43) |
+| Open jobs read | 2,306 |
+| With a GTM-ops opening | 29 (crm_admin 2, gtm_engineer 8, marketing_ops 2, revops 8, sales_leader 10, sales_ops 8) |
+| With a raise in the last year | not checked (SEC lookups off for this run) |
+| CRM identified | 108 (high 73, low 1, medium 34 confidence) |
+| Accounts with a failed source | 0 |
+| Requests | 1,170 (1,150 served from the cache of earlier runs, 20 blocked by robots.txt, 1 failed) |
+
+Hand check of real job titles from this run, labelled by Claude, which also wrote the rules, so not blind: 29 of 30 titles the classifier accepted are GTM-ops roles (precision 97%), and 1 of 30 near-miss titles it rejected (containing sales, revenue, ops, CRM, marketing...) turned out to be GTM-ops roles. Details and borderline calls: [`docs/methodology.md`](docs/methodology.md).
 
 ### Offline demo world
 
@@ -110,6 +125,7 @@ Not run yet: see `docs/runbook.md`.
 | | |
 |---|---|
 | Accounts looked at | 3 (as of 2026-10-15) |
+| Sources used | job boards, SEC Form D, websites |
 | Tiers | A 1, B 2, C 0 |
 | Job board found | 3 of 3 (ashby 1, greenhouse 1, lever 1; via careers_page 1, guess 2) |
 | Open jobs read | 5 |
@@ -117,7 +133,7 @@ Not run yet: see `docs/runbook.md`.
 | With a raise in the last year | 1 |
 | CRM identified | 3 (high 3 confidence) |
 | Accounts with a failed source | 0 |
-| Requests | 25, of which 0 from cache, 0 blocked by robots.txt, 0 failed |
+| Requests | 25 (0 served from the cache of earlier runs, 0 blocked by robots.txt, 0 failed) |
 
 ### GTM-ops title classifier
 
@@ -125,7 +141,7 @@ Hand-labelled titles. The dev set was used to tune the rules; the holdout was wr
 
 | Set | Precision | Recall | Role kind | Seniority |
 |---|---|---|---|---|
-| dev (45 titles) | 100% | 100% | 100% | 100% |
+| dev (47 titles) | 100% | 100% | 100% | 100% |
 | holdout (40 titles) | 100% | 100% | 100% | 100% |
 
 ### Clay credit budget
