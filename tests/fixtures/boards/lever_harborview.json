@@ -1,0 +1,3 @@
+[
+  {"id": "l1", "text": "GTM Engineer", "categories": {"commitment": "Full Time", "department": "Revenue", "location": "Miami, FL", "team": "Revenue Operations", "allLocations": ["Miami, FL"]}, "country": "US", "workplaceType": "remote", "createdAt": 1790000000000, "hostedUrl": "https://jobs.lever.co/harborview/l1", "applyUrl": "https://jobs.lever.co/harborview/l1/apply", "descriptionPlain": "Harborview is building its GTM engineering function.", "descriptionBodyPlain": "", "openingPlain": "", "additionalPlain": "We use Clay, HubSpot and Segment.", "lists": [{"text": "You will", "content": "<li>Build enrichment in Clay</li><li>Maintain HubSpot workflows</li>"}], "salaryRange": {"min": 140000, "max": 170000, "currency": "USD", "interval": "per-year-salary"}}
+]
