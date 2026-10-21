@@ -24,6 +24,11 @@
   },
   "mode": "offline",
   "open_jobs_read": 5,
+  "sources": {
+    "job_boards": true,
+    "sec_funding": true,
+    "websites": true
+  },
   "tiers": {
     "A": 1,
     "B": 2,

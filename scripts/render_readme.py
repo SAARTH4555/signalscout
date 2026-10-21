@@ -35,6 +35,20 @@ def _counts(d: dict[str, int]) -> str:
     return ", ".join(f"{k} {v}" for k, v in d.items()) or "none"
 
 
+def _sources(run: dict[str, Any]) -> str:
+    used = run.get("sources") or {"job_boards": True, "sec_funding": True, "websites": True}
+    names = {"job_boards": "job boards", "sec_funding": "SEC Form D", "websites": "websites"}
+    on = [names[k] for k, v in used.items() if v]
+    off = [names[k] for k, v in used.items() if not v]
+    return ", ".join(on) + (f" (off: {', '.join(off)})" if off else "")
+
+
+def _funding(run: dict[str, Any]) -> str:
+    if not (run.get("sources") or {}).get("sec_funding", True):
+        return "not checked (SEC lookups off for this run)"
+    return f"{run['with_recent_funding']:,}"
+
+
 def run_section(title: str, run: dict[str, Any], note: str) -> list[str]:
     n = run["accounts"]
     tiers = run["tiers"]
@@ -47,27 +61,33 @@ def run_section(title: str, run: dict[str, Any], note: str) -> list[str]:
         "| | |",
         "|---|---|",
         f"| Accounts looked at | {n:,} (as of {run['as_of']}) |",
+        f"| Sources used | {_sources(run)} |",
         f"| Tiers | A {tiers['A']}, B {tiers['B']}, C {tiers['C']} |",
         f"| Job board found | {run['with_board']:,} of {n:,} ({_counts(run['boards_by_ats'])}; "
         f"via {_counts(run['boards_found_via'])}) |",
         f"| Open jobs read | {run['open_jobs_read']:,} |",
         f"| With a GTM-ops opening | {run['with_gtm_ops_opening']:,} "
         f"({_counts(run['gtm_ops_openings_by_kind'])}) |",
-        f"| With a raise in the last year | {run['with_recent_funding']:,} |",
+        f"| With a raise in the last year | {_funding(run)} |",
         f"| CRM identified | {sum(run['crm_identified_by_confidence'].values()):,} "
         f"({_counts(run['crm_identified_by_confidence'])} confidence) |",
         f"| Accounts with a failed source | {run['accounts_with_errors']:,} |",
-        f"| Requests | {fetches.get('requests', 0):,}, of which {fetches.get('from_cache', 0):,} "
-        f"from cache, {fetches.get('blocked_by_robots', 0):,} blocked by robots.txt, "
-        f"{fetches.get('failed', 0):,} failed |",
+        f"| Requests | {fetches.get('requests', 0):,} ({fetches.get('from_cache', 0):,} served "
+        f"from the cache of earlier runs, {fetches.get('blocked_by_robots', 0):,} blocked by "
+        f"robots.txt, {fetches.get('failed', 0):,} failed) |",
         "",
     ]
     review = load("live_review") if title.startswith("Live") else None
     if review:
+        ok, n = review["accepted_correct"], review["accepted_checked"]
+        missed, near = review["near_miss_missed"], review["near_miss_checked"]
         lines += [
-            f"Hand check of {review['accepted_checked']} accepted and "
-            f"{review['rejected_checked']} rejected real job titles: precision "
-            f"{pct(review['precision'])}, recall {pct(review['recall'])}.",
+            f"Hand check of real job titles from this run, labelled by {review['labelled_by']}: "
+            f"{ok} of {n} titles the classifier accepted are GTM-ops roles"
+            f"{f' (precision {pct(ok / n)})' if n else ''}, and {missed} of {near} near-miss "
+            "titles it rejected (containing sales, revenue, ops, CRM, marketing...) turned out "
+            "to be GTM-ops roles. Details and borderline calls: "
+            "[`docs/methodology.md`](docs/methodology.md).",
             "",
         ]
     return lines
@@ -120,8 +140,8 @@ def render() -> str:
         lines += run_section(
             "Live run",
             live,
-            "Real public data: YC directory seeds, live job boards, SEC EDGAR and company sites. "
-            "Account-level counts only; the account list itself is not committed.",
+            "Real public data from the sources listed. Account-level counts only; the account "
+            "list itself is not committed.",
         )
     else:
         lines += ["### Live run", "", "Not run yet: see `docs/runbook.md`.", ""]

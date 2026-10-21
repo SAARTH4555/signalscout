@@ -24,10 +24,17 @@ def test_stale_readme_fails_and_live_results_render(
     shutil.copytree(ROOT / "results", results)
     live = json.loads((results / "run_offline.json").read_text())
     live["as_of"] = "2026-11-01"
+    live["sources"] = {"job_boards": True, "sec_funding": True, "websites": True}
     (results / "live.json").write_text(json.dumps(live))
     (results / "live_review.json").write_text(
         json.dumps(
-            {"accepted_checked": 30, "rejected_checked": 30, "precision": 0.9333, "recall": 0.9}
+            {
+                "accepted_checked": 30,
+                "accepted_correct": 28,
+                "near_miss_checked": 30,
+                "near_miss_missed": 2,
+                "labelled_by": "a reviewer",
+            }
         )
     )
     readme = tmp_path / "README.md"
@@ -46,5 +53,7 @@ def test_stale_readme_fails_and_live_results_render(
     module["main"]()
     text = readme.read_text()
     assert "### Live run" in text and "(as of 2026-11-01)" in text
-    assert "precision 93%, recall 90%" in text
+    assert "28 of 30 titles the classifier accepted are GTM-ops roles (precision 93%)" in text
+    assert "and 2 of 30 near-miss titles" in text and "labelled by a reviewer:" in text
+    assert "| With a raise in the last year | 1 |" in text
     assert "Not run yet" not in text

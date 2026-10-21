@@ -68,3 +68,22 @@ Every point adds a sentence to the account's reasons; the score never appears wi
 Each account is collected independently. A broken careers page, an SEC error or an unreachable
 site costs that account that signal; the failure is recorded on the account and counted in the
 run report, and the run continues.
+
+## Live hand check (2026-10-21)
+
+The live run over 170 YC companies read 2,306 open jobs. A sample of 30 titles the classifier
+accepted and 30 "near-miss" titles it rejected (containing sales, revenue, ops, CRM, marketing,
+growth...) was labelled by hand. Labeller: Claude, which also wrote the rules, so not blind.
+
+- **Accepted, 29 of 30 right.** The one wrong: "Head of Sales Enablement", matched as a sales
+  leader; enablement is a training role.
+- **Near misses, 1 of 30 missed.** "Sr. Engineering Manager - Incentive Compensation Ops":
+  sales compensation is Sales Ops work.
+- **Borderline, labelled not GTM-ops** (consistent with the definition above): "Strategy &
+  Operations Lead" and "Business Operations" (biz ops is excluded by design), "Revenue and
+  Billing Operations Manager" (finance-side), "Strategic Finance Manager, GTM", "Support Systems
+  Specialist", "Sales Performance Manager".
+
+Both mistakes were fixed after the check ("Head of Sales Enablement / Development" no longer
+count as sales leaders; "compensation ops" counts as Sales Ops) and added to the dev set. The
+README reports the check as it was measured, before those fixes.
