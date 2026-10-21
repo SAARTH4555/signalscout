@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SignalScout Plan</title>
+<style>
+:root{--bg:#f7f7f5;--panel:#fff;--ink:#1b1d21;--muted:#5d636e;--line:#e2e3e0;--accent:#c2410c;--todo:#64748b;--prog:#2563eb;--done:#15803d;--blocked:#b91c1c;--crit:#fff4ec}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121316;--panel:#1b1d22;--ink:#e8e8e6;--muted:#9aa0aa;--line:#2c2f36;--accent:#fb923c;--todo:#94a3b8;--prog:#60a5fa;--done:#4ade80;--blocked:#f87171;--crit:#2a1d14}}
+:root[data-theme="dark"]{--bg:#121316;--panel:#1b1d22;--ink:#e8e8e6;--muted:#9aa0aa;--line:#2c2f36;--accent:#fb923c;--todo:#94a3b8;--prog:#60a5fa;--done:#4ade80;--blocked:#f87171;--crit:#2a1d14}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:24px 16px 64px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between;margin-bottom:16px}
+h1{margin:0;font-size:24px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:13px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,select{font:inherit;font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.progress{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin:8px 0 20px}
+.progress>i{display:block;height:100%;background:var(--done)}
+details{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin:10px 0}
+details>summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;gap:10px;align-items:baseline}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"▸";color:var(--muted);transition:transform .15s}
+details[open]>summary::before{transform:rotate(90deg)}
+.phase{margin:0 12px 12px;border-radius:10px}
+.task{margin:0 10px 10px;border-radius:10px}
+.task.crit{background:var(--crit);border-left:4px solid var(--accent)}
+.id{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);font-size:13px}
+.title{font-weight:600;flex:1}
+.meta{color:var(--muted);font-size:12px}
+.pill{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.s-todo{color:var(--todo)}.s-in_progress{color:var(--prog)}.s-done{color:var(--done)}.s-blocked{color:var(--blocked)}
+.crit-tag{font-size:11px;color:var(--accent);font-weight:600}
+.body{padding:0 16px 14px 34px;font-size:14px}
+.body h4{margin:10px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.body ul{margin:0;padding-left:18px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:var(--bg);padding:1px 5px;border-radius:5px;word-break:break-word}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:4px 16px}
+.decisions{font-size:13px}
+.decisions dt{font-family:ui-monospace,Menlo,monospace;color:var(--muted);margin-top:6px}
+.decisions dd{margin:0}
+.hidden{display:none}
+@media print{body{background:#fff;color:#000}.bar,.chips,button,select{display:none!important}details{border:1px solid #999;break-inside:avoid}details:not([open])>*:not(summary){display:block}.task.crit{background:#fff;border-left:4px solid #000}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><h1>SignalScout — build plan</h1><div class="sub" id="sub"></div></div>
+  <div class="bar">
+    <div class="chips" role="group" aria-label="Filter by status" id="chips"></div>
+    <button id="expand">Expand all</button>
+    <button id="theme" aria-label="Toggle dark mode">Theme</button>
+  </div>
+</header>
+<div class="progress" aria-hidden="true"><i id="pbar"></i></div>
+<div id="tree"></div>
+<details><summary><span class="title">Decisions</span></summary><div class="body"><dl class="decisions" id="dec"></dl></div></details>
+</div>
+<script>
+const PLAN = {"version": "2.0", "feature": "signalscout", "scope": "medium", "generatedAt": "2026-10-21T12:00:00Z", "decisions": {"q1_scope": "Full signal set: seeds = YC directory (yc-oss) + user seed CSV; signals = GTM-ops jobs on Ashby/Greenhouse/Lever, funding via SEC Form D lookup for known companies, CRM from job descriptions + homepage scripts; Tier A/B/C with reasons; Clay table spec + Tier-A CSV; HubSpot hand-off; accounts only, no named people committed", "q2_architecture": "Hand-off via PipelineOS: SignalScout writes PipelineOS golden CSVs (companies.csv golden column order + header-only contacts.csv) with signal_* columns; PipelineOS gets a small change: loader passes through spec-declared company properties + a second spec portal/gtm-consultancy.yaml. Normalizers copied (~25 lines) with contract tests.", "q3_clay": "Free plan: ship Clay table spec (columns, waterfall order, prompts, formula, credit budget per row) + Tier-A CSV within 200-row cap; user builds table once and screenshots; credits only for people-finding on Tier A", "q4_libraries": "httpx (match PipelineOS, MockTransport tests; note release gap in README), pydantic v2 + pydantic-settings, typer, PyYAML, tldextract (offline), rapidfuzz, stdlib xml.etree for Form D, stdlib html for unescape", "q5_deployment_risk": "Polite + cached: per-host token bucket (ATS 1 rps, SEC 5 rps), descriptive User-Agent with contact email (SEC requirement), on-disk response cache, robots.txt respected for websites; tests/CI never hit network", "q6_coverage": "85% branch coverage fail_under", "workflow": "Stacked PRs: one PR per task based on previous task branch; merge chain at end", "naming": "Public repo stays generic ('a RevOps consultancy'); LeanScale-specific Tier-A list is a private generated deliverable"}, "sprints": [{"id": "1", "name": "SignalScout v1", "estimateDays": 3, "phases": [{"id": "1.1", "name": "Foundation", "tasks": [{"id": "1.1.1", "title": "Repo scaffold + CI (quality -> test -> build)", "acceptance": ["Same toolchain and gates as PipelineOS: uv, ruff, strict mypy (src+tests+scripts), branch coverage >= 85%", "CI needs no network or secrets", "Wheel installs and the CLI runs in the build job"], "estimateHours": 1, "timeComplexity": "n/a", "spaceComplexity": "n/a", "files": ["pyproject.toml", "src/signalscout/", "tests/", ".github/workflows/ci.yml"], "dependencies": [], "smokeTest": "uv run ruff check . && uv run ruff format --check . && uv run mypy && uv run pytest --cov && uv build", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": true}, {"id": "1.1.2", "title": "Polite fetcher: per-host rate limits, disk cache, robots.txt, User-Agent", "acceptance": ["Fetcher Protocol with HttpFetcher (httpx) and FakeFetcher (URL -> recorded response)", "Per-host token buckets (ATS 1 rps, SEC 5 rps, websites 1 rps) with injected clock/sleeper", "On-disk cache keyed by URL with TTL; conditional requests with ETag / Last-Modified", "robots.txt honoured for company websites; SEC requests carry a User-Agent with a contact email from settings and refuse to run without one", "429/5xx retried with backoff; 404 returned as a value, not raised"], "estimateHours": 3, "timeComplexity": "O(1) per request", "spaceComplexity": "O(cache size)", "files": ["src/signalscout/fetch/"], "dependencies": ["1.1.1"], "smokeTest": "uv run pytest tests/fetch -q", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": true}]}, {"id": "1.2", "name": "Accounts and signals", "tasks": [{"id": "1.2.1", "title": "Account model, seeds (YC directory + seed CSV), copied normalizers", "acceptance": ["Account(company_key, name, domain, source, team_size, location, industries)", "YC loader filters B2B + Active + US + team size band (configurable), from yc-oss all.json", "User seed CSV (name, domain) merged and deduped by company_key", "Normalizers copied from PipelineOS with contract tests on the same golden cases"], "estimateHours": 2, "timeComplexity": "O(n)", "spaceComplexity": "O(n)", "files": ["src/signalscout/accounts.py", "src/signalscout/normalize.py", "src/signalscout/seeds/"], "dependencies": ["1.1.2"], "smokeTest": "uv run pytest tests/test_seeds.py -q", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": true}, {"id": "1.2.2", "title": "Job-board collectors (Ashby, Greenhouse, Lever) + board discovery", "acceptance": ["Parsers to one Job model: title, posted_at (UTC) + source field, url, location, remote, description text", "404 = no board; 200 + [] = board with no openings", "Board slug from links on the careers page first, else name/domain candidates verified against the board's company", "Fixtures trimmed from real responses; no network in tests"], "estimateHours": 3.5, "timeComplexity": "O(c * k) requests, c companies, k <= 9 probes", "spaceComplexity": "O(jobs)", "files": ["src/signalscout/jobs/"], "dependencies": ["1.2.1"], "smokeTest": "uv run pytest tests/jobs -q", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": true}, {"id": "1.2.3", "title": "GTM-ops role classifier + tech mentions in job descriptions", "acceptance": ["Title classifier: RevOps / Sales Ops / Marketing Ops / GTM engineer / CRM admin (Salesforce, HubSpot), with exclusions (account executive, SDR, recruiter)", "Tech mentions from descriptions (Salesforce, HubSpot, Pardot, Marketo, Outreach, Salesloft, Gong, Clay) -> CRM evidence", "Hand-labelled title set (>= 60) with precision/recall in results/"], "estimateHours": 2.5, "timeComplexity": "O(titles)", "spaceComplexity": "O(1)", "files": ["src/signalscout/roles.py", "evals/titles.jsonl"], "dependencies": ["1.2.2"], "smokeTest": "uv run pytest tests/test_roles.py -q", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": false}, {"id": "1.2.4", "title": "SEC Form D funding lookup", "acceptance": ["Company search -> CIK candidates, name match after stripping legal suffixes, state check", "Submissions -> latest D / D/A -> raw primary_doc.xml (strip xsl prefix)", "Funding(amount_sold, first_sale_date, filed_date, industry_group, amendment); pooled funds and SPV-like names excluded", "Stage guessed from amount, labelled as a guess", "Fixtures for match, no-match, fund and amendment cases"], "estimateHours": 3, "timeComplexity": "O(c) lookups", "spaceComplexity": "O(1) per company", "files": ["src/signalscout/funding.py"], "dependencies": ["1.1.2", "1.2.1"], "smokeTest": "uv run pytest tests/test_funding.py -q", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": false}, {"id": "1.2.5", "title": "CRM detection from website scripts (+ GTM container)", "acceptance": ["About 20 own regex signatures (not GPL data) for HubSpot, Pardot, Marketo, Salesforce, Intercom, Segment", "Homepage plus /demo or /contact; Google Tag Manager container fetched and scanned", "CrmGuess(crm, confidence, evidence); job-description mention beats a script; marketing tool is never reported as fact"], "estimateHours": 2.5, "timeComplexity": "O(pages)", "spaceComplexity": "O(1)", "files": ["src/signalscout/crm.py"], "dependencies": ["1.1.2"], "smokeTest": "uv run pytest tests/test_crm.py -q", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": false}]}, {"id": "1.3", "name": "Scoring and outputs", "tasks": [{"id": "1.3.1", "title": "Fit + intent scoring with recency decay and reasons", "acceptance": ["Rules in scoring.yaml (validated): fit gates (size band, US, B2B) and intent points (GTM-ops role, recency-decayed; funding within window; CRM known; stacked signals bonus)", "Score -> Tier A/B/C with thresholds; every point carries a reason", "Table-driven tests at each rule edge"], "estimateHours": 2.5, "timeComplexity": "O(signals) per account", "spaceComplexity": "O(1)", "files": ["src/signalscout/score.py", "config/scoring.yaml"], "dependencies": ["1.2.2", "1.2.3"], "smokeTest": "uv run pytest tests/test_score.py -q", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": true}, {"id": "1.3.2", "title": "Pipeline + CLI + outputs (Clay CSV, PipelineOS CSVs, run report)", "acceptance": ["signalscout run: seeds -> boards -> roles -> funding -> CRM -> score, cached", "Outputs: accounts.csv, tier_a.csv (Clay import, <= 200 rows), pipelineos/companies.csv (golden column order + signal_* columns) and header-only contacts.csv", "results/run.json: counts per tier, signal coverage, fetch and cache stats", "--offline demo on recorded fixtures for CI and the README"], "estimateHours": 3, "timeComplexity": "O(c) + fetches", "spaceComplexity": "O(c)", "files": ["src/signalscout/pipeline.py", "src/signalscout/cli.py", "src/signalscout/export.py"], "dependencies": ["1.3.1", "1.2.4", "1.2.5"], "smokeTest": "uv run signalscout run --offline && uv run pytest -q", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": true}, {"id": "1.3.3", "title": "Clay table spec + rendered build guide + credit budget", "acceptance": ["clay/table_spec.yaml validated: Accounts table (imported columns), People table (find people by persona), email waterfall order + validation, Claygent 'why now' prompt with output schema, opening-line prompt that must cite a signal, run-only-if Tier A", "Credit budget per row and per month computed from the spec, checked against the free plan", "docs/clay-table.md generated from the spec (with --check in CI)"], "estimateHours": 2.5, "timeComplexity": "n/a", "spaceComplexity": "n/a", "files": ["clay/table_spec.yaml", "src/signalscout/clay.py", "docs/clay-table.md"], "dependencies": ["1.3.2"], "smokeTest": "uv run signalscout clay-spec --check", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": false}]}, {"id": "1.4", "name": "HubSpot hand-off (in PipelineOS)", "tasks": [{"id": "1.4.1", "title": "PipelineOS: load spec-declared company properties + GTM-consultancy spec", "acceptance": ["pipelineos load passes through CSV columns that are properties declared on companies in the given spec", "portal/gtm-consultancy.yaml: company_key, account_segment and signal_* properties (validation rules where useful)", "End-to-end test: a SignalScout fixture CSV loads into the fake portal with signal properties set", "Stacked on PipelineOS feature/1.6.1-docs as its own branch"], "estimateHours": 2.5, "timeComplexity": "O(n)", "spaceComplexity": "O(batch)", "files": ["~/projects/pipelineos/src/pipelineos/data/load.py", "~/projects/pipelineos/portal/gtm-consultancy.yaml"], "dependencies": ["1.3.2"], "smokeTest": "cd ~/projects/pipelineos && uv run pytest -q", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": false}]}, {"id": "1.5", "name": "Docs, results, live run", "tasks": [{"id": "1.5.1", "title": "README, methodology, ethics note, rendered results, reproduce script", "acceptance": ["README results rendered from results/*.json with --check in CI", "docs/methodology.md (sources, scoring, limits), docs/ethics.md (public data, no named people in repo, CAN-SPAM/GDPR notes)", "scripts/reproduce.sh"], "estimateHours": 2.5, "timeComplexity": "n/a", "spaceComplexity": "n/a", "files": ["README.md", "docs/", "scripts/"], "dependencies": ["1.3.2", "1.3.3", "1.4.1"], "smokeTest": "uv run python scripts/render_readme.py --check", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": true}, {"id": "1.5.2", "title": "Live run over real seeds + private Tier-A brief", "acceptance": ["Needs a contact email for the SEC User-Agent (ask the user)", "Real run over YC seeds; account-level summary committed to results/live.json", "Tier-A list and a short brief kept private (data/, not committed)", "User builds the Clay table from the spec and adds screenshots"], "estimateHours": 2, "timeComplexity": "O(c) fetches", "spaceComplexity": "O(c)", "files": ["results/live.json"], "dependencies": ["1.5.1"], "smokeTest": "uv run signalscout run --live", "ciJobs": ["quality", "test", "build"], "status": "todo", "criticalPath": true}]}]}]};
+const KEY = "plan:" + PLAN.feature;
+const STATUSES = ["todo","in_progress","done","blocked"];
+const LABEL = {todo:"To do",in_progress:"In progress",done:"Done",blocked:"Blocked"};
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.generatedAt===PLAN.generatedAt)return s.statuses}catch(e){}return null}
+function save(st){try{localStorage.setItem(KEY,JSON.stringify({generatedAt:PLAN.generatedAt,statuses:st}))}catch(e){}}
+const tasks=[];PLAN.sprints.forEach(s=>s.phases.forEach(p=>p.tasks.forEach(t=>tasks.push(t))));
+let status=load()||Object.fromEntries(tasks.map(t=>[t.id,t.status]));
+const filter=new Set(STATUSES);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function render(){
+  const tree=document.getElementById("tree");const open=new Set([...tree.querySelectorAll("details[open]")].map(d=>d.dataset.k));
+  const first=!tree.innerHTML;tree.innerHTML="";
+  PLAN.sprints.forEach(s=>{
+    const sd=document.createElement("details");sd.dataset.k="s"+s.id;sd.open=first||open.has(sd.dataset.k);
+    sd.innerHTML=`<summary><span class="id">Sprint ${esc(s.id)}</span><span class="title">${esc(s.name)}</span><span class="meta">~${s.estimateDays} days</span></summary>`;
+    s.phases.forEach(p=>{
+      const pd=document.createElement("details");pd.className="phase";pd.dataset.k="p"+p.id;pd.open=first||open.has(pd.dataset.k);
+      const hrs=p.tasks.reduce((a,t)=>a+t.estimateHours,0);
+      pd.innerHTML=`<summary><span class="id">${esc(p.id)}</span><span class="title">${esc(p.name)}</span><span class="meta">${hrs}h</span></summary>`;
+      let shown=0;
+      p.tasks.forEach(t=>{
+        const st=status[t.id];if(!filter.has(st))return;shown++;
+        const td=document.createElement("details");td.className="task"+(t.criticalPath?" crit":"");td.dataset.k="t"+t.id;td.open=open.has(td.dataset.k);
+        td.innerHTML=`<summary><span class="id">${esc(t.id)}</span><span class="title">${esc(t.title)}</span>${t.criticalPath?'<span class="crit-tag">critical path</span>':""}<span class="pill s-${st}">${LABEL[st]}</span></summary>
+        <div class="body">
+          <div class="grid meta"><span>Estimate: ${t.estimateHours}h</span><span>Time: ${esc(t.timeComplexity)}</span><span>Space: ${esc(t.spaceComplexity)}</span><span>Depends on: ${t.dependencies.length?t.dependencies.map(esc).join(", "):"—"}</span></div>
+          <h4>Acceptance</h4><ul>${t.acceptance.map(a=>`<li>${esc(a)}</li>`).join("")}</ul>
+          <h4>Files</h4><div>${t.files.map(f=>`<code>${esc(f)}</code>`).join(" ")}</div>
+          <h4>Smoke test</h4><code>${esc(t.smokeTest)}</code>
+          <h4>Status</h4><select data-id="${esc(t.id)}" aria-label="Status for ${esc(t.id)}">${STATUSES.map(x=>`<option value="${x}"${x===st?" selected":""}>${LABEL[x]}</option>`).join("")}</select>
+        </div>`;
+        pd.appendChild(td);
+      });
+      if(shown)sd.appendChild(pd);
+    });
+    tree.appendChild(sd);
+  });
+  tree.querySelectorAll("select[data-id]").forEach(sel=>sel.addEventListener("change",e=>{status[e.target.dataset.id]=e.target.value;save(status);render()}));
+  const done=tasks.filter(t=>status[t.id]==="done").length;
+  document.getElementById("pbar").style.width=(100*done/tasks.length)+"%";
+  document.getElementById("sub").textContent=`${PLAN.scope} scope · ${tasks.length} tasks · ${done} done · ${tasks.filter(t=>t.criticalPath).length} on critical path`;
+}
+const chips=document.getElementById("chips");
+STATUSES.forEach(s=>{const b=document.createElement("button");b.className="chip";b.textContent=LABEL[s];b.setAttribute("aria-pressed","true");
+  b.onclick=()=>{filter.has(s)?filter.delete(s):filter.add(s);b.setAttribute("aria-pressed",filter.has(s));render()};chips.appendChild(b)});
+document.getElementById("expand").onclick=()=>{const all=document.querySelectorAll("#tree details");const anyClosed=[...all].some(d=>!d.open);all.forEach(d=>d.open=anyClosed)};
+const root=document.documentElement;
+try{const t=localStorage.getItem("plan-theme");if(t)root.dataset.theme=t}catch(e){}
+document.getElementById("theme").onclick=()=>{const dark=root.dataset.theme?root.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;root.dataset.theme=dark?"light":"dark";try{localStorage.setItem("plan-theme",root.dataset.theme)}catch(e){}};
+const dec=document.getElementById("dec");Object.entries(PLAN.decisions).forEach(([k,v])=>{dec.insertAdjacentHTML("beforeend",`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`)});
+render();
+</script>
+</body>
+</html>
