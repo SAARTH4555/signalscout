@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "titles": 45,
+    "gtm_ops_roles": 27,
+    "precision": 1.0,
+    "recall": 1.0,
+    "kind_accuracy": 1.0,
+    "seniority_accuracy": 1.0,
+    "misses": []
+  },
+  "holdout": {
+    "titles": 40,
+    "gtm_ops_roles": 23,
+    "precision": 1.0,
+    "recall": 1.0,
+    "kind_accuracy": 1.0,
+    "seniority_accuracy": 1.0,
+    "misses": []
+  }
+}
