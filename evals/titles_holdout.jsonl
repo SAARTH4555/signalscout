@@ -1,0 +1,40 @@
+{"title": "Revenue Operations Lead", "kind": "revops", "seniority": "manager"}
+{"title": "VP, Revenue Operations", "kind": "revops", "seniority": "leader"}
+{"title": "RevOps Engineer", "kind": "revops", "seniority": "ic"}
+{"title": "Revenue Operations & Strategy Manager", "kind": "revops", "seniority": "manager"}
+{"title": "Sr. Sales Operations Specialist", "kind": "sales_ops", "seniority": "ic"}
+{"title": "Sales Systems Administrator", "kind": "sales_ops", "seniority": "ic"}
+{"title": "Director of Sales Operations", "kind": "sales_ops", "seniority": "leader"}
+{"title": "Marketing Ops Manager (HubSpot)", "kind": "marketing_ops", "seniority": "manager"}
+{"title": "Marketing Operations Analyst", "kind": "marketing_ops", "seniority": "ic"}
+{"title": "Head of Marketing Operations", "kind": "marketing_ops", "seniority": "leader"}
+{"title": "Founding GTM Engineer", "kind": "gtm_engineer", "seniority": "ic"}
+{"title": "GTM Automation Engineer", "kind": "gtm_engineer", "seniority": "ic"}
+{"title": "Go To Market Operations Manager", "kind": "gtm_engineer", "seniority": "manager"}
+{"title": "Salesforce Admin / Business Analyst", "kind": "crm_admin", "seniority": "ic"}
+{"title": "Lead Salesforce Architect", "kind": "crm_admin", "seniority": "manager"}
+{"title": "HubSpot Specialist", "kind": "crm_admin", "seniority": "ic"}
+{"title": "CRM Administrator", "kind": "crm_admin", "seniority": "ic"}
+{"title": "Customer Operations Manager", "kind": "cs_ops", "seniority": "manager"}
+{"title": "Senior Manager, Customer Success Operations", "kind": "cs_ops", "seniority": "manager"}
+{"title": "SVP of Sales", "kind": "sales_leader", "seniority": "leader"}
+{"title": "Vice President of Sales, Enterprise", "kind": "sales_leader", "seniority": "leader"}
+{"title": "Chief Revenue Officer (CRO)", "kind": "sales_leader", "seniority": "leader"}
+{"title": "Enterprise Account Executive", "kind": null, "seniority": null}
+{"title": "Business Development Representative", "kind": null, "seniority": null}
+{"title": "Site Reliability Engineer", "kind": null, "seniority": null}
+{"title": "DevOps Lead", "kind": null, "seniority": null}
+{"title": "Talent Acquisition Partner", "kind": null, "seniority": null}
+{"title": "Revenue Accounting Manager", "kind": null, "seniority": null}
+{"title": "Sales Manager", "kind": null, "seniority": null}
+{"title": "Head of Growth", "kind": null, "seniority": null}
+{"title": "Operations Manager", "kind": null, "seniority": null}
+{"title": "Marketing Coordinator", "kind": null, "seniority": null}
+{"title": "Solutions Engineer", "kind": null, "seniority": null}
+{"title": "Data Analyst, Sales", "kind": null, "seniority": null}
+{"title": "Customer Support Specialist", "kind": null, "seniority": null}
+{"title": "Finance Operations Analyst", "kind": null, "seniority": null}
+{"title": "Partnerships Manager", "kind": null, "seniority": null}
+{"title": "Head of Sales Development", "kind": null, "seniority": null}
+{"title": "Salesforce Consultant", "kind": "crm_admin", "seniority": "ic"}
+{"title": "Growth Marketing Manager (CRO & Experimentation)", "kind": null, "seniority": null}
