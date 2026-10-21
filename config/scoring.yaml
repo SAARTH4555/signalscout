@@ -1,0 +1,38 @@
+# SignalScout scoring for a RevOps / GTM-ops consultancy.
+#
+# Fit says whether a company is the kind that buys this help at all; intent says whether it needs
+# it now. Every point that fires adds one plain sentence to the account's reasons, so a rep can
+# read why an account is Tier A without opening this file.
+
+fit:
+  team_min: 50
+  team_max: 500
+  in_band_points: 15
+  unknown_size_points: 5   # no size from any source: do not punish, do not reward
+  us_points: 5
+  b2b_points: 5
+  crm_known_points: 5
+
+intent:
+  # Points for the strongest open GTM-ops role, halved every `role_half_life_days` since it was
+  # posted. A role posted 45 days ago is worth half; one from four months ago, about a sixth.
+  role_points:
+    revops: 30
+    gtm_engineer: 30
+    crm_admin: 25
+    sales_ops: 25
+    sales_leader: 20
+    marketing_ops: 15
+    cs_ops: 10
+  role_half_life_days: 45
+  undated_role_age_days: 30   # some boards omit dates: treat as a month old
+  leader_bonus: 5             # hiring the head of the function = building it from scratch
+  multiple_roles_bonus: 10    # two or more GTM-ops roles open at once
+  funding_points: 20
+  funding_window_days: 365
+  funding_half_life_days: 120
+  stacked_bonus: 10           # a GTM-ops opening and a recent raise together
+
+tiers:
+  a: 60
+  b: 35
