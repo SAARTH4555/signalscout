@@ -1,0 +1,35 @@
+{
+  "accounts": 3,
+  "accounts_with_errors": 0,
+  "as_of": "2026-10-15",
+  "boards_by_ats": {
+    "ashby": 1,
+    "greenhouse": 1,
+    "lever": 1
+  },
+  "boards_found_via": {
+    "careers_page": 1,
+    "guess": 2
+  },
+  "crm_identified_by_confidence": {
+    "high": 3
+  },
+  "fetches": {
+    "requests": 25
+  },
+  "gtm_ops_openings_by_kind": {
+    "crm_admin": 1,
+    "gtm_engineer": 1,
+    "revops": 1
+  },
+  "mode": "offline",
+  "open_jobs_read": 5,
+  "tiers": {
+    "A": 1,
+    "B": 2,
+    "C": 0
+  },
+  "with_board": 3,
+  "with_gtm_ops_opening": 3,
+  "with_recent_funding": 1
+}

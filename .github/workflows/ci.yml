@@ -32,6 +32,8 @@ jobs:
         with: { python-version: "3.12" }
       - run: uv sync --locked --group dev
       - run: uv run pytest --cov --cov-report=term-missing
+      - name: End-to-end offline run on the recorded demo world
+        run: uv run signalscout run --offline --out /tmp/signalscout-out
 
   build:
     needs: test

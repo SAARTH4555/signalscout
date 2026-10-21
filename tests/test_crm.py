@@ -58,6 +58,7 @@ def test_scan_counts_robots_blocks_and_survives_errors() -> None:
 
     scan = scan_site(Site(), "acme.io")
     assert scan.blocked == 1 and scan.pages == ("https://acme.io/",) and scan.tools == ()
+    assert scan.failed == 2  # /contact and the tag-manager container
 
 
 def site(*tools: str) -> SiteScan:
